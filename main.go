@@ -21,6 +21,7 @@ func main() {
 		// check to make sure id isn't empty
 		if !validate(id) {
 			// exit with 2 if it is
+			fmt.Println(id)
 			fmt.Println("This is not a valid .nds rom!")
 			os.Exit(2)
 		}
@@ -42,6 +43,6 @@ func readOffset(file string) string {
 
 // validate will validate the game ID to make sure it's valid
 func validate(gameID string) bool {
-	x := regexp.MustCompile(`[A-Z][A-Z][A-Z][A-Z]`)
+	x := regexp.MustCompile(`[A-Z0-9][A-Z0-9][A-Z0-9][A-Z40-9]`)
 	return x.MatchString(gameID)
 }

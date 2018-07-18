@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"os/exec"
 )
 
@@ -13,4 +15,11 @@ func convertToBMP(gameID, fileType string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// once the conversion is done, we should delete the tmp file
+	err = os.Remove("tmp." + fileType)
+	if err != nil {
+		fmt.Println("There was an error deleting the tmp file? Did you already delete it?")
+	}
+	fmt.Println("Conversion of box art is complete!")
 }
