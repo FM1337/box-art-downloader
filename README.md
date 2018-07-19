@@ -18,3 +18,8 @@ This downloads boxart for games for the Nintendo DS for DSIMenu++
 
 ## Downloading art for a folder of games
 `` box-art-downloader.exe directory/ ``
+
+
+# Disclaimer
+
+So while this should go without saying, I do not encourage piracy, you should only download boxarts for games that you actually own. And also Nintendo owns the copyright to the Nintendo DS
