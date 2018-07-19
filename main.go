@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"regexp"
+	"strings"
+	"time"
 )
 
 // This offset array gets us our game id
@@ -16,17 +17,78 @@ func main() {
 	if len(os.Args) > 1 {
 		// make the maps before reading the game
 		makeMap()
-		// read the game
-		id := readOffset(os.Args[1])
-		// check to make sure id isn't empty
-		if !validate(id) {
-			// exit with 2 if it is
-			fmt.Println(id)
-			fmt.Println("This is not a valid .nds rom!")
-			os.Exit(2)
+		// check to see if we're reading a directory or a file
+		file, err := os.Stat(os.Args[1])
+		if err != nil {
+			fmt.Println("There's a problem reading your file/folder!")
+			os.Exit(4)
 		}
-		downloadCover(id)
-		os.Exit(0)
+		// if we're reading a directory
+		if file.IsDir() {
+			games, err := ioutil.ReadDir(os.Args[1])
+			if err != nil {
+				fmt.Println("There's a problem reading your files in your folder!")
+				os.Exit(5)
+			}
+			// when wait hits 10, we'll want to wait a few seconds before
+			// continuing so that we don't get blocked
+			wait := 0
+			// looping time!
+			for _, game := range games {
+				if strings.HasSuffix(game.Name(), "nds") {
+					// get the id
+					id := readOffset(os.Args[1] + "/" + game.Name())
+					// make sure the id isn't empty
+					if id == "" {
+						//fmt.Println(game.Name() + " is not a valid nds rom!")
+						// instead of exiting, just continue to the next loop
+						continue
+					}
+					// if we do have an ID, next we check the validation
+					if !validate(id) {
+						// exit with 2 if it is
+						//fmt.Println(game.Name() + " is not a valid nds rom!")
+						// instead of exiting, just continue to the next loop
+						continue
+					}
+					// if we make it to this part of the loop, we've passed the main checks!
+					// so now we want to actually begin downloading the cover!
+					downloadCover(id)
+					wait++
+					if wait == 10 {
+						fmt.Println("Waiting 2 seconds before continuing so we don't get blocked by the server!")
+						time.Sleep(2 * time.Second)
+						wait = 0
+					}
+				} else {
+					//fmt.Println(game.Name() + " is not a valid nds rom!")
+				}
+			}
+			// once the loop is finished
+			// exit the script.
+			fmt.Println("Box art has been downloaded!")
+			fmt.Println("Thank you for using the box art downloader by Allen (FM1337)!")
+			fmt.Println("Have a nice day!")
+			os.Exit(0)
+		} else {
+			// read the game
+			id := readOffset(os.Args[1])
+			// check to make sure id isn't empty
+			if id == "" {
+				fmt.Println("This is not a valid nds rom!")
+				os.Exit(2)
+			}
+			if !validate(id) {
+				// exit with 2 if it is
+				fmt.Println("This is not a valid nds rom!")
+				os.Exit(2)
+			}
+			downloadCover(id)
+			fmt.Println("Box art has been downloaded!")
+			fmt.Println("Thank you for using the box art downloader by Allen (FM1337)!")
+			fmt.Println("Have a nice day!")
+			os.Exit(0)
+		}
 	}
 	fmt.Println("You must provide a rom or a folder of roms!")
 	os.Exit(1)
@@ -35,7 +97,7 @@ func main() {
 func readOffset(file string) string {
 	game, err := ioutil.ReadFile(file)
 	if err != nil {
-		log.Fatal(err)
+		return ""
 	}
 	// return the game
 	return string(game[offsets[0]:offsets[1]])

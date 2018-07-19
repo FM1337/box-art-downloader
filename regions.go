@@ -12,9 +12,10 @@ func makeMap() {
 	// European
 	region["D"], region["W"], region["X"], region["Y"],
 		region["Z"], region["C"], region["H"], region["S"], region["N"],
-		region["M"], region["Q"], region["U"], region["V"], region["I"] =
+		region["M"], region["Q"], region["U"], region["V"], region["I"],
+		region["P"] =
 		"EN", "EN", "EN", "EN", "EN", "EN", "EN", "EN", "EN", "EN", "EN",
-		"EN", "EN", "EN"
+		"EN", "EN", "EN", "EN"
 	// Korean
 	region["K"] = "KO"
 	// Japanese

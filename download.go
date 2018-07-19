@@ -43,7 +43,7 @@ func downloadCover(gameID string) {
 		}
 		return
 	}
-	fmt.Println("Looks like this wasn't a ROM and slipped past my checks, whoops")
+	fmt.Println("Looks like this wasn't a ROM and slipped past my checks, whoops, GAME ID: " + gameID)
 	return
 }
 
@@ -122,5 +122,38 @@ func downloadPNG(rg, gameID string) bool {
 		// return true because if we get to this part of the loop, then we've got the file
 		return true
 	}
-	return false
+	// bonus round!
+	// There's a site that has png covers for games also
+
+	// so we first try to check the head of the site
+	resp, err := http.Head("https://ds-covers.thenets.org/game/ds/png/" + gameID + ".png")
+	if err != nil {
+		return false
+	}
+	// if we don't got the OK, then we return false
+	if resp.StatusCode != http.StatusOK {
+		return false
+	}
+
+	// if we make it to this point, then there's a file there and we should
+	// download it!
+	resp, err = http.Get("https://ds-covers.thenets.org/game/ds/png/" + gameID + ".png")
+	// if there's an error, return false
+	if err != nil {
+		return false
+	}
+	tmpFile, err := os.Create("tmp.png")
+	if err != nil {
+		fmt.Println("Looks like we couldn't create a file, I'm gonna exit the program here just to avoid any bigger problems")
+		os.Exit(3)
+	}
+	_, err = io.Copy(tmpFile, resp.Body)
+	if err != nil {
+		fmt.Println("Looks like we couldn't copy the image contents to a file, I'm gonna exit the program here just to avoid any bigger problems")
+		os.Exit(3)
+	}
+	// close the file
+	tmpFile.Close()
+	// return true because if we get to this part, then we've got the file
+	return true
 }
