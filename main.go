@@ -15,8 +15,11 @@ var offsets = []uint8{0xC, 0x10}
 func main() {
 	// check to make sure we've been provided a file or a folder
 	if len(os.Args) > 1 {
-		// make the maps before reading the game
-		makeMap()
+		// let's check to see if the boxart directory exists and create it if it doesn't
+		if _, err := os.Stat("./boxart"); os.IsNotExist(err) {
+			// if it doesn't, then create the directory!
+			os.Mkdir("boxart", 0700)
+		}
 		// check to see if we're reading a directory or a file
 		file, err := os.Stat(os.Args[1])
 		if err != nil {
@@ -33,6 +36,7 @@ func main() {
 			// when wait hits 10, we'll want to wait a few seconds before
 			// continuing so that we don't get blocked
 			wait := 0
+			successful := 0
 			// looping time!
 			for _, game := range games {
 				if strings.HasSuffix(game.Name(), "nds") {
@@ -53,11 +57,14 @@ func main() {
 					}
 					// if we make it to this part of the loop, we've passed the main checks!
 					// so now we want to actually begin downloading the cover!
-					downloadCover(id)
+					success := downloadCover(id)
+					if success {
+						successful++
+					}
 					wait++
 					if wait == 10 {
-						fmt.Println("Waiting 2 seconds before continuing so we don't get blocked by the server!")
-						time.Sleep(2 * time.Second)
+						fmt.Println("Waiting 5 seconds before continuing so we don't get blocked by the server!")
+						time.Sleep(5 * time.Second)
 						wait = 0
 					}
 				} else {
@@ -66,7 +73,10 @@ func main() {
 			}
 			// once the loop is finished
 			// exit the script.
-			fmt.Println("Box art has been downloaded!")
+			fmt.Println(fmt.Sprintf("We were able to download %d/%d of the boxart for your games!", successful, len(games)))
+			if successful == len(games) {
+				fmt.Println("Awesome! We were able to get boxart for all your games!")
+			}
 			fmt.Println("Thank you for using the box art downloader by Allen (FM1337)!")
 			fmt.Println("Have a nice day!")
 			os.Exit(0)
@@ -83,7 +93,11 @@ func main() {
 				fmt.Println("This is not a valid nds rom!")
 				os.Exit(2)
 			}
-			downloadCover(id)
+			success := downloadCover(id)
+			if !success {
+				fmt.Println("I'm sorry that we weren't able to find your boxart, don't forget to post an issue on the github repo and I'll do my best to get the art added!")
+				os.Exit(0)
+			}
 			fmt.Println("Box art has been downloaded!")
 			fmt.Println("Thank you for using the box art downloader by Allen (FM1337)!")
 			fmt.Println("Have a nice day!")
