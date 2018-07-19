@@ -19,6 +19,9 @@ This downloads boxart for games for the Nintendo DS for [DSIMenu++](https://gith
 ## Downloading art for a folder of games
 `` box-art-downloader.exe directory/ ``
 
+# Copying to DSIMenu++
+Once the art has been downloaded, copy the boxart folder to the
+``/_nds/dsimenuplusplus`` folder on your 3DS/2DS/DSI's sd card.
 
 # Disclaimer
 

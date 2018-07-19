@@ -6,3 +6,7 @@
 *.txt
 box-art-downloader
 magick
+
+*.zip
+*.tar.gz
+*.exe
