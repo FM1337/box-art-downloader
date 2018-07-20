@@ -23,6 +23,9 @@ This downloads boxart for games for the Nintendo DS for [DSIMenu++](https://gith
 Once the art has been downloaded, copy the boxart folder to the
 ``/_nds/dsimenuplusplus`` folder on your 3DS/2DS/DSI's sd card.
 
+# Special Thanks
+Special thanks to [GameTDB](https://www.gametdb.com/) for having an amazing DS cover/box art collection!
+
 # Disclaimer
 
 So while this should go without saying, I do not encourage piracy, you should only download boxarts for games that you actually own. And also Nintendo owns the copyright to the Nintendo DS
